@@ -5,7 +5,7 @@ import { useState } from "react";
 import { createTask } from "../../services/tasks";
 
 import { useAuth } from "../../context/AuthContext";
-
+import { toast } from "sonner";
 export default function TaskForm() {
   const { user } = useAuth();
 
@@ -23,8 +23,10 @@ export default function TaskForm() {
   ) => {
     e.preventDefault();
 
-    // if (!user) return;
-
+    if (!user) {
+      toast.error("You must be logged in");
+      return;
+    }
     await createTask({
       title,
       description,
@@ -49,11 +51,12 @@ export default function TaskForm() {
 
       completedAt: null,
 
-      user.uid,
+      userId: user.uid,
 
       recurring: false,
 
       timerRunning: false,
+      elapsedTimeSeconds: 0,
     });
 
     setTitle("");

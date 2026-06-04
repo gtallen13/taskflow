@@ -141,7 +141,7 @@ export default function TaskDialog({
 
         completedAt: null,
 
-        userId: user!.uid,
+        userId: user.uid,
 
         recurring: false,
 
