@@ -126,24 +126,18 @@ export default function TaskDialog({
       await createTask({
         ...payload,
 
-        tags: [],
-
         estimatedHours: 0,
 
         actualHours: 0,
 
         elapsedTimeSeconds: 0,
 
-        dueDate: "",
-        status:"todo",
         createdAt:
           new Date().toISOString(),
 
         completedAt: null,
 
         userId: user.uid,
-
-        recurring: false,
 
         timerRunning: false,
       });
@@ -154,7 +148,13 @@ export default function TaskDialog({
     task
       ? "Task updated"
       : "Task created"
-);
+    );
+    setTitle("");
+    setDescription("");
+    setDueDate("");
+    setTags("");
+    setPriority("medium");
+    setRecurring(false);
   };
 
   return (
