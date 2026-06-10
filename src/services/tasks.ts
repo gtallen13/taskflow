@@ -8,7 +8,8 @@ import {
   orderBy,
   query,
   serverTimestamp,
-  where
+  where,
+  getDoc
 } from "firebase/firestore";
 
 import { db } from "../../firebase/config";
@@ -67,25 +68,8 @@ export const subscribeToTasks = (
 };
 
 export const startTaskTimer =
-  async (taskId: string) => {
-    const taskRef = doc(
-      db,
-      "tasks",
-      taskId
-    );
-
-    await updateDoc(taskRef, {
-      timerRunning: true,
-
-      timerStartedAt:
-        new Date().toISOString(),
-    });
-  };
-
-  export const stopTaskTimer =
   async (
-    taskId: string,
-    elapsedSeconds: number
+    taskId: string
   ) => {
     const taskRef = doc(
       db,
@@ -93,43 +77,167 @@ export const startTaskTimer =
       taskId
     );
 
-    await updateDoc(taskRef, {
+  const snapshot =
+    await getDoc(taskRef);
+
+  if (
+    !snapshot.exists()
+  ) {
+    throw new Error(
+      "Task not found"
+    );
+  }
+
+  const task =
+    snapshot.data();
+
+  if (
+    task.status ===
+    "completed"
+  ) {
+    return;
+  }
+
+  if (
+    task.timerRunning
+  ) {
+    return;
+  }
+
+  await updateDoc(
+    taskRef,
+    {
+      timerRunning: true,
+
+      timerStartedAt:
+        new Date().toISOString(),
+
+      status:
+        task.status ===
+        "todo"
+          ? "in_progress"
+          : task.status,
+    }
+  );
+};
+
+export const stopTaskTimer =
+async (
+  taskId: string,
+  elapsedSeconds: number
+) => {
+  await updateTask(
+    taskId,
+    {
       timerRunning: false,
 
-      timerStartedAt: null,
+      timerStartedAt:
+        null,
 
       elapsedTimeSeconds:
         elapsedSeconds,
 
       actualHours:
-        elapsedSeconds / 3600,
-    });
-  };
+        Number(
+          (
+            elapsedSeconds /
+            3600
+          ).toFixed(2)
+        ),
+    }
+  );
+};
 
 export const updateTaskStatus =
-async (
-  id: string,
-  status:
-    | "todo"
-    | "in_progress"
-    | "completed"
-) => {
-  const taskRef = doc(
-    db,
-    "tasks",
-    id
-  );
+  async (
+    taskId: string,
+    status:
+      | "todo"
+      | "in_progress"
+      | "completed"
+  ) => {
+    const taskRef = doc(
+      db,
+      "tasks",
+      taskId
+    );
 
-  await updateDoc(taskRef, {
-    status,
+    const snapshot =
+      await getDoc(taskRef);
 
-    completedAt:
+    if (
+      !snapshot.exists()
+    ) {
+      return;
+    }
+
+    const task =
+      snapshot.data();
+
+    const updates: any = {
+      status,
+      updatedAt:
+        new Date().toISOString(),
+    };
+
+    if (
       status ===
       "completed"
-        ? new Date().toISOString()
-        : null,
+    ) {
+      updates.completedAt =
+        new Date().toISOString();
 
-    updatedAt:
-      new Date().toISOString(),
-  });
+      if (
+        task.timerRunning &&
+        task.timerStartedAt
+      ) {
+        const started =
+          new Date(
+            task.timerStartedAt
+          ).getTime();
+
+        const now =
+          Date.now();
+
+        const additionalSeconds =
+          Math.floor(
+            (now - started) /
+              1000
+          );
+
+        const finalSeconds =
+          task.elapsedTimeSeconds +
+          additionalSeconds;
+
+        updates.elapsedTimeSeconds =
+          finalSeconds;
+
+        updates.actualHours =
+          Number(
+            (
+              finalSeconds /
+              3600
+            ).toFixed(2)
+          );
+      }
+
+      updates.timerRunning =
+        false;
+
+      updates.timerStartedAt =
+        null;
+    }
+
+    if (
+      status !==
+      "completed"
+    ) {
+      updates.completedAt =
+        null;
+    }
+
+    await updateDoc(
+      taskRef,
+      updates
+    );
 };

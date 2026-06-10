@@ -18,12 +18,14 @@ import {
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+
+import { updateTask } from "../../services/tasks";
 interface Props {
   tasks: Task[];
 }
 
 import TaskDialog from "./task-dialog";
-
+import TimeEditor from "./time-editor";
 export default function TaskTable({
   tasks,
 }: Props) {
@@ -256,10 +258,16 @@ export default function TaskTable({
                 )}
               </td>
 
-              <td className="p-4 font-mono">
-                {formatTime(
-                  liveTimes[task.id] || 0
-                )}
+              <td className="p-4">
+                <TimeEditor
+                  task={task}
+                  displaySeconds={
+                    liveTimes[
+                      task.id
+                    ] ??
+                    task.elapsedTimeSeconds
+                  }
+                />
               </td>
                 
               <td className="p-4">
@@ -279,28 +287,29 @@ export default function TaskTable({
 
               <td className="p-4">
 
-                {task.timerRunning ? (
-                  <button
-                    onClick={() =>
-                      stopTaskTimer(
-                        task.id,
-                        liveTimes[task.id] || 0
-                      )
-                    }
-                    className="cursor-pointer text-orange-500"
-                  >
-                    <Square className="h-4 w-4" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() =>
-                      startTaskTimer(task.id)
-                    }
-                    className="cursor-pointer text-green-500"
-                  >
-                    <Play className="h-4 w-4" />
-                  </button>
-                )}
+                {task.status !== "completed" &&
+                  (task.timerRunning ? (
+                    <button
+                      onClick={() =>
+                        stopTaskTimer(
+                          task.id,
+                          liveTimes[task.id] || 0
+                        )
+                      }
+                      className="cursor-pointer text-orange-500"
+                    >
+                      <Square className="h-4 w-4" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        startTaskTimer(task.id)
+                      }
+                      className="cursor-pointer text-green-500"
+                    >
+                      <Play className="h-4 w-4" />
+                    </button>
+                  ))}
 
                 <div className="flex gap-2">
                   <TaskDialog
