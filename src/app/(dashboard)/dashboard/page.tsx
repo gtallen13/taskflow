@@ -46,14 +46,14 @@ export default function DashboardPage() {
     );
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">
+    <div className="space-y-8">
+      <div className="rounded-2xl bg-[#14213D] p-8 text-white shadow-lg">
+        <h1 className="text-4xl font-bold">
           Dashboard
         </h1>
 
-        <p className="text-slate-500">
-          Productivity overview
+        <p className="mt-2 text-[#E5E5E5]">
+          Track productivity, monitor progress and stay focused.
         </p>
       </div>
 
@@ -61,7 +61,7 @@ export default function DashboardPage() {
         tasks={tasks}
       />
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <NotificationsPanel
           notifications={
             notifications

@@ -100,28 +100,28 @@ export default function TaskTable({
       clearInterval(interval);
   }, [tasks]);
   return (
-    <div className="overflow-hidden rounded-xl border bg-white">
+    <div className="h-1 bg-linear-to-r from-[#FCA311] via-[#FCA311] to-transparent">
       
       <table className="w-full text-sm">
-        <thead className="sticky top-0 bg-slate-100">
-          <tr className="text-left text-sm">
-            <th className="p-4">
+        <thead className="sticky top-0 bg-gradient-to-r from-[#000000] via-[#14213D] to-[#14213D] text-white shadow-md">
+          <tr className="text-left text-xs font-semibold uppercase tracking-[0.15em]">
+            <th className="w-[320px] p-4">
               Title
             </th>
 
-            <th className="p-4">
+            <th className="w-30 p-4">
               Priority
             </th>
 
-            <th className="p-4">
+            <th className="w-40 p-4">
               Status
             </th>
 
-            <th className="p-4">
+            <th className="w-35 p-4">
               Due Date
             </th>
 
-            <th className="p-4">
+            <th className="w-55 p-4">
               Completed
             </th>
 
@@ -143,21 +143,21 @@ export default function TaskTable({
           {tasks.map((task) => (
             <tr
               key={task.id}
-              className="border-t transition hover:bg-slate-50"
+              className="text-left text-xs font-semibold uppercase tracking-[0.15em]"
             >
               <td className="p-4">
                 <div>
-                  <p className={`font-medium
+                  <p className={`font-semibold text-[#14213D]
                     ${
                       task.status ===
                       "completed"
-                        ? "text-slate-400 line-through"
+                        ? "text-slate-400 line-through opacity-70"
 
                         : ""}`}
                   >
                     {task.title}
                     {task.recurring && (
-                      <span className="mt-1 inline-block rounded-full bg-purple-100 px-2 py-1 text-xs text-purple-700">
+                      <span className="mt-1 inline-block rounded bg-[#FCA311]/20 text-[#14213D] px-2 py-1 text-xs">
                         Recurring •{" "}
                         {task.recurringType}
                       </span>
@@ -178,12 +178,12 @@ export default function TaskTable({
 
                   ${
                     task.priority === "high"
-                      ? "bg-red-100 text-red-600"
+                      ? "bg-red-100 text-red-700 font-medium"
 
                       : task.priority === "medium"
-                      ? "bg-yellow-100 text-yellow-700"
+                      ? "bg-[#FCA311]/20 text-[#14213D] font-medium"
 
-                      : "bg-green-100 text-green-700"
+                      : "bg-[#E5E5E5] text-[#14213D] font-medium"
                   }`}
                 >
                   {
@@ -204,8 +204,7 @@ export default function TaskTable({
                         | "completed"
                     )
                   }
-                  className={`cursor-pointer rounded-full border px-2 py-1 text-xs capitalize
-
+                  className={`cursor-pointer rounded-full border px-2 py-1 text-xs capitalize font-medium border-[#E5E5E5]
                   ${
                     task.status ===
                     "completed"
@@ -213,9 +212,9 @@ export default function TaskTable({
 
                       : task.status ===
                         "in_progress"
-                      ? "bg-blue-100 text-blue-700"
+                      ? "bg-[#FCA311]/20 text-[#14213D]"
 
-                      : "bg-slate-100 text-slate-700"
+                      : "bg-[#E5E5E5] text-[#14213D]"
                   }`}
                 >
                   <option value="todo">
@@ -234,7 +233,7 @@ export default function TaskTable({
               
               <td className="p-4">
                 {task.dueDate ? (
-                  <span>
+                  <span className="rounded-full bg-[#14213D]/10 px-3 py-1 text-xs font-medium text-[#14213D]">
                     {task.dueDate}
                   </span>
                 ) : (
@@ -275,7 +274,7 @@ export default function TaskTable({
                   {task.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-700"
+                      className="rounded-full px-2 py-1 text-xs bg-[#14213D]/10 text-[#14213D]"
                     >
                       #{tag}
                     </span>
@@ -296,7 +295,7 @@ export default function TaskTable({
                           liveTimes[task.id] || 0
                         )
                       }
-                      className="cursor-pointer text-orange-500"
+                      className="cursor-pointer text-[#14213D]"
                     >
                       <Square className="h-4 w-4" />
                     </button>
@@ -305,7 +304,7 @@ export default function TaskTable({
                       onClick={() =>
                         startTaskTimer(task.id)
                       }
-                      className="cursor-pointer text-green-500"
+                      className="cursor-pointer text-[#FCA311]"
                     >
                       <Play className="h-4 w-4" />
                     </button>
@@ -315,7 +314,7 @@ export default function TaskTable({
                   <TaskDialog
                     task={task}
                     trigger={
-                      <button className="text-blue-500 cursor-pointer">
+                      <button className="text-[#14213D] cursor-pointer">
                         <Pencil className="h-4 w-4" />
                       </button>
                     }
