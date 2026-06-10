@@ -24,7 +24,7 @@ import { WeeklyReport } from "../../../../types/report";
 import {
   sendReportEmail,
 } from "../../../../lib/send-report-email";
-
+import { getUserSettings } from "@/services/settings";
 import {useAuth} from "../../../../context/AuthContext"
 import Link from "next/link";
 
@@ -37,8 +37,7 @@ export default function ReportsPage() {
       WeeklyReport[]
     >([]);
 
-  const [email, setEmail] =
-  useState("");
+  const [ reportEmail, setReportEmail,] = useState("");
   const [sending, setSending] =
   useState(false);
   const { user } = useAuth();
@@ -53,9 +52,29 @@ export default function ReportsPage() {
       );
 
     loadReports();
+    loadSettings();
 
     return () => unsubscribe();
   }, [user]);
+
+
+const loadSettings =
+  async () => {
+    if (!user) return;
+
+    const settings =
+      await getUserSettings(
+        user.uid
+      );
+
+    if (
+      settings?.reportEmail
+    ) {
+      setReportEmail(
+        settings.reportEmail
+      );
+    }
+};
 
   const loadReports =
     async () => {
@@ -105,18 +124,27 @@ export default function ReportsPage() {
         </button>
       </div>
       
-      <div className="flex gap-4">
-        <input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(e) =>
-            setEmail(
-              e.target.value
-            )
-          }
-          className="w-full rounded-lg border bg-white p-2"
-        />
+      <div className="rounded-xl border bg-white p-4">
+        <p className="text-sm text-slate-600">
+          This report will be sent to{" "}
+          <span className="font-semibold">
+            {reportEmail || "No email configured"}
+          </span>
+          .
+        </p>
+
+        <p className="mt-1 text-sm text-slate-500">
+          If you would like to change the
+          destination email, update it in
+          Settings.
+        </p>
+
+        <Link
+          href="/dashboard/settings"
+          className="mt-3 inline-flex cursor-pointer rounded-lg border px-3 py-2 text-sm hover:bg-slate-50"
+        >
+          Go to Settings
+        </Link>
       </div>
 
       <div className="space-y-4">
@@ -192,7 +220,7 @@ export default function ReportsPage() {
                     setSending(true);
 
                     await sendReportEmail(
-                      email,
+                      reportEmail,
                       report
                     );
 
