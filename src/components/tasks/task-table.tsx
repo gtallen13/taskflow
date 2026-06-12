@@ -131,13 +131,15 @@ export default function TaskTable({
           {tasks.map((task) => (
             <tr
               key={task.id}
-              className="
-                border-t
+              className={
+                `border-t
                 border-[#E5E5E5]
                 transition-all
                 duration-200
                 hover:bg-[#F7F8FA]
-                hover:shadow-sm">
+                hover:shadow-sm
+                ${task.timerRunning ? "border-l-4 border-[#FCA311]": ""}`
+              }>
               <td className="p-4">
                 <div>
                   <p className={`font-semibold text-[#14213D]
@@ -183,24 +185,6 @@ export default function TaskTable({
               </td>
 
               <td>
-              {task.priority ===
-              "high" ? (
-                <span className="text-red-600 text-xs font-medium">
-                  ▲ High
-                </span>
-              ) : task.priority ===
-                "medium" ? (
-                <span className="text-[#FCA311] text-xs font-medium">
-                  ■ Medium
-                </span>
-              ) : (
-                <span className="text-slate-500 text-xs font-medium">
-                  ▼ Low
-                </span>
-              )}
-            </td>
-
-              <td className="p-4">
                 <select
                   value={task.status}
                   onChange={(e) =>
@@ -237,8 +221,23 @@ export default function TaskTable({
                     Completed
                   </option>
                 </select>
+                {task.priority ===
+                "high" ? (
+                  <span className="text-red-600 text-xs font-medium">
+                    ▲ High
+                  </span>
+                ) : task.priority ===
+                  "medium" ? (
+                  <span className="text-[#FCA311] text-xs font-medium">
+                    ■ Medium
+                  </span>
+                ) : (
+                  <span className="text-slate-500 text-xs font-medium">
+                    ▼ Low
+                  </span>
+                )}
               </td>
-              
+  
               <td className="p-5">
                 <div className="space-y-2 text-sm">
                   <div>
@@ -290,7 +289,19 @@ export default function TaskTable({
                           liveTimes[task.id] || 0
                         )
                       }
-                      className="cursor-pointer text-[#14213D]"
+                      className="
+                      flex
+                      h-10
+                      w-10
+                      items-center
+                      justify-center
+                      rounded-full
+                      bg-[#14213D]
+                      text-white
+                      transition
+                      hover:scale-105
+                      cursor-pointer
+                      "
                     >
                       <Square className="h-4 w-4" />
                     </button>
@@ -299,7 +310,19 @@ export default function TaskTable({
                       onClick={() =>
                         startTaskTimer(task.id)
                       }
-                      className="cursor-pointer text-[#FCA311]"
+                      className="
+                        flex
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-[#FCA311]
+                        text-[#14213D]
+                        transition
+                        hover:scale-105
+                        cursor-pointer"
+                        
                     >
                       <Play className="h-4 w-4" />
                     </button>

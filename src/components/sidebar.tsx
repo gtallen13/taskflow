@@ -133,7 +133,7 @@ export default function Sidebar() {
           );
         })}
         <div className="mt-auto border-t pt-4">
-          <p className="text-sm font-medium">
+          <p className="text-sm font-medium text-white">
             {user?.displayName ||
               "User"}
           </p>
