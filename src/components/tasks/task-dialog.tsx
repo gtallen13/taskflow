@@ -156,7 +156,7 @@ export default function TaskDialog({
     setPriority("medium");
     setRecurring(false);
   };
-
+  
   return (
     <Dialog
       open={open}
