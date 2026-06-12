@@ -105,35 +105,23 @@ export default function TaskTable({
       <table className="w-full text-sm">
         <thead className="sticky top-0 bg-gradient-to-r from-[#000000] via-[#14213D] to-[#14213D] text-white shadow-md">
           <tr className="text-left text-xs font-semibold uppercase tracking-[0.15em]">
-            <th className="w-[320px] p-4">
-              Title
+            <th className="w-[420px] p-5">
+              Task
             </th>
 
-            <th className="w-30 p-4">
-              Priority
-            </th>
-
-            <th className="w-40 p-4">
+            <th className="w-[180px] p-5">
               Status
             </th>
 
-            <th className="w-35 p-4">
-              Due Date
+            <th className="w-[240px] p-5">
+              Schedule
             </th>
 
-            <th className="w-55 p-4">
-              Completed
+            <th className="w-[280px] p-5">
+              Time
             </th>
 
-            <th className="p-4">
-              Hours
-            </th>
-
-            <th className="p-4">
-              Tags
-            </th>
-
-            <th className="p-4">
+            <th className="w-[160px] p-5">
               Actions
             </th>
           </tr>
@@ -143,8 +131,13 @@ export default function TaskTable({
           {tasks.map((task) => (
             <tr
               key={task.id}
-              className="text-left text-xs font-semibold uppercase tracking-[0.15em]"
-            >
+              className="
+                border-t
+                border-[#E5E5E5]
+                transition-all
+                duration-200
+                hover:bg-[#F7F8FA]
+                hover:shadow-sm">
               <td className="p-4">
                 <div>
                   <p className={`font-semibold text-[#14213D]
@@ -169,28 +162,43 @@ export default function TaskTable({
                       task.description
                     }
                   </p>
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {task.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="
+                          rounded-full
+                          bg-[#14213D]/10
+                          px-2
+                          py-1
+                          text-xs
+                          text-[#14213D]
+                        "
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </td>
 
-              <td className="p-4">
-                <span
-                  className={`rounded-full px-2 py-1 text-xs capitalize
-
-                  ${
-                    task.priority === "high"
-                      ? "bg-red-100 text-red-700 font-medium"
-
-                      : task.priority === "medium"
-                      ? "bg-[#FCA311]/20 text-[#14213D] font-medium"
-
-                      : "bg-[#E5E5E5] text-[#14213D] font-medium"
-                  }`}
-                >
-                  {
-                    task.priority
-                  }
+              <td>
+              {task.priority ===
+              "high" ? (
+                <span className="text-red-600 text-xs font-medium">
+                  ▲ High
                 </span>
-              </td>
+              ) : task.priority ===
+                "medium" ? (
+                <span className="text-[#FCA311] text-xs font-medium">
+                  ■ Medium
+                </span>
+              ) : (
+                <span className="text-slate-500 text-xs font-medium">
+                  ▼ Low
+                </span>
+              )}
+            </td>
 
               <td className="p-4">
                 <select
@@ -231,32 +239,34 @@ export default function TaskTable({
                 </select>
               </td>
               
-              <td className="p-4">
-                {task.dueDate ? (
-                  <span className="rounded-full bg-[#14213D]/10 px-3 py-1 text-xs font-medium text-[#14213D]">
-                    {task.dueDate}
-                  </span>
-                ) : (
-                  <span className="text-slate-400">
-                    —
-                  </span>
-                )}
+              <td className="p-5">
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="font-medium text-[#14213D]">
+                      Due:
+                    </span>
+
+                    <div className="text-slate-500">
+                      {task.dueDate || "—"}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="font-medium text-[#14213D]">
+                      Completed:
+                    </span>
+
+                    <div className="text-slate-500">
+                      {task.completedAt
+                        ? new Date(
+                            task.completedAt
+                          ).toLocaleDateString()
+                        : "—"}
+                    </div>
+                  </div>
+                </div>
               </td>
               
-              <td className="p-4 text-sm">
-                {task.completedAt ? (
-                  <span>
-                    {new Date(
-                      task.completedAt
-                    ).toLocaleString()}
-                  </span>
-                ) : (
-                  <span className="text-slate-400">
-                    —
-                  </span>
-                )}
-              </td>
-
               <td className="p-4">
                 <TimeEditor
                   task={task}
@@ -268,21 +278,6 @@ export default function TaskTable({
                   }
                 />
               </td>
-                
-              <td className="p-4">
-                <div className="flex flex-wrap gap-1">
-                  {task.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full px-2 py-1 text-xs bg-[#14213D]/10 text-[#14213D]"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </td>
-              
-
 
               <td className="p-4">
 
@@ -314,7 +309,20 @@ export default function TaskTable({
                   <TaskDialog
                     task={task}
                     trigger={
-                      <button className="text-[#14213D] cursor-pointer">
+                      <button className="
+                        flex
+                        h-9
+                        w-9
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-[#14213D]/10
+                        text-[#14213D]
+                        transition
+                        hover:bg-[#14213D]
+                        hover:text-white
+                        cursor-pointer
+                        ">
                         <Pencil className="h-4 w-4" />
                       </button>
                     }
@@ -335,8 +343,19 @@ export default function TaskTable({
                         "Task deleted"
                       );
                     }}
-                    className="text-red-500 cursor-pointer"
-                  >
+                    className="
+                    flex
+                    h-9
+                    w-9
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-red-100
+                    text-red-600
+                    transition
+                    hover:bg-red-500
+                    hover:text-white
+                    cursor-pointer">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>

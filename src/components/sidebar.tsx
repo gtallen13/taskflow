@@ -10,6 +10,8 @@ import {
   FileText,
   Settings,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
+
 
 const links = [
   {
@@ -37,30 +39,99 @@ import { useAuth } from "../context/AuthContext";
 export default function Sidebar() {
 
   const { user } = useAuth();
-
+  const pathname = usePathname();
   return (
-    <aside className="w-64 border-r bg-white p-4">
-      <h2 className="mb-8 text-2xl font-bold">
-        TaskFlow
-      </h2>
+    <aside className="flex
+    h-screen
+    w-72
+    flex-col
+    border-r
+    border-[#1f335f]
+    bg-gradient-to-b
+    from-[#000000]
+    via-[#14213D]
+    to-[#14213D]
+    p-4">
+      <div className="px-6 py-8">
+        <div className="flex items-center gap-3">
+          <div
+            className="
+            flex
+            h-12
+            w-12
+            items-center
+            justify-center
+            rounded-xl
+            bg-[#FCA311]
+            text-lg
+            font-bold
+            text-[#14213D]
+          "
+          >
+            T
+          </div>
 
+          <div>
+            <h1 className="text-3xl font-bold text-white">
+              TaskFlow
+            </h1>
+
+            <p className="text-xs text-slate-400">
+              Productivity Suite
+            </p>
+          </div>
+        </div>
+      </div>
+      <p className="mb-4 px-3 text-xs uppercase tracking-[0.2em] text-slate-500">Workspace</p>
       <nav className="space-y-2">
         {links.map((link) => {
           const Icon = link.icon;
-
+          const active = pathname === link.href;
           return (
             <Link
               key={link.href}
               href={link.href}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition hover:bg-slate-100"
+              className={`
+                relative
+                flex
+                items-center
+                gap-3
+                rounded-xl
+                px-4
+                py-3
+                transition-all
+                duration-200
+
+                ${
+                  active
+                    ? "bg-white/10 text-white"
+                    : "text-slate-400 hover:bg-white/5 hover:text-white"
+                }
+              `}
             >
-              <Icon className="h-4 w-4" />
-              {link.name}
+              {active && (
+                <div
+                  className="
+                  absolute
+                  left-0
+                  top-2
+                  h-8
+                  w-1
+                  rounded-r-full
+                  bg-[#FCA311]
+                "
+                />
+              )}
+
+              <Icon className="h-5 w-5" />
+
+              <span>
+                {link.name}
+              </span>
             </Link>
             
           );
         })}
-
         <div className="mt-auto border-t pt-4">
           <p className="text-sm font-medium">
             {user?.displayName ||
