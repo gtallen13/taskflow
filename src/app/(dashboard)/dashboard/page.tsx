@@ -85,7 +85,7 @@ export default function DashboardPage() {
           <NotificationsPanel notifications={notifications}/>
         </div>
       </div>
-        <WeeklyActivityChart tasks={tasks}/>
+      <WeeklyActivityChart tasks={tasks}/>
     </div>
   );
 }

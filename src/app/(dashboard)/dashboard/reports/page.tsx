@@ -99,18 +99,41 @@ const loadSettings =
 
       loadReports();
     };
+  const totalReports = reports.length;
+  const totalHours =
+    reports.reduce(
+      (sum, report) =>
+        sum + report.totalHours,
+      0
+    );
 
+  const totalCompletedTasks =
+    reports.reduce(
+      (sum, report) =>
+        sum +
+        report.completedTasks
+          .length,
+      0
+    );
+
+  const averageHours =
+    reports.length
+      ? (
+          totalHours /
+          reports.length
+        ).toFixed(1)
+      : "0";
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+
       <div className="flex items-center justify-between">
         <div>
-
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-4xl font-bold text-[#14213D]">
             Reports
           </h1>
 
-          <p className="text-slate-500">
-            Weekly productivity summaries
+          <p className="mt-1 text-slate-500">
+            Track productivity and share progress
           </p>
         </div>
 
@@ -118,137 +141,206 @@ const loadSettings =
           onClick={
             handleGenerateReport
           }
-          className="cursor-pointer rounded-lg bg-black px-4 py-2 text-white"
+          className="
+            cursor-pointer
+            rounded-xl
+            bg-[#FCA311]
+            px-5
+            py-3
+            font-medium
+            text-[#14213D]
+            shadow-sm
+            transition
+            hover:shadow-lg
+          "
         >
           Generate Report
         </button>
       </div>
-      
-      <div className="rounded-xl border bg-white p-4">
-        <p className="text-sm text-slate-600">
-          This report will be sent to{" "}
-          <span className="font-semibold">
-            {reportEmail || "No email configured"}
-          </span>
-          .
+      <div className="rounded-3xl border border-[#E5E5E5] bg-white p-6 shadow-sm">
+        <h2 className="font-semibold text-[#14213D]">
+          Report Delivery
+        </h2>
+
+        <p className="mt-2 text-slate-500">
+          Reports will be sent to:
         </p>
 
-        <p className="mt-1 text-sm text-slate-500">
-          If you would like to change the
-          destination email, update it in
-          Settings.
+        <p className="mt-2 font-medium">
+          {reportEmail ||
+            "No email configured"}
         </p>
 
         <Link
           href="/dashboard/settings"
-          className="mt-3 inline-flex cursor-pointer rounded-lg border px-3 py-2 text-sm hover:bg-slate-50"
+          className="
+            mt-4
+            inline-flex
+            rounded-xl
+            border
+            px-4
+            py-2
+            text-sm
+            transition
+            hover:bg-slate-50
+          "
         >
-          Go to Settings
+          Manage Settings
         </Link>
       </div>
 
-      <div className="space-y-4">
-        {reports.map(
-          (report) => (
-            <div
-              key={report.id}
-              className="rounded-xl border bg-white p-4"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-semibold">
-                    Weekly Report
-                  </h2>
+      {reports.length === 0 ? (
+        <div className="rounded-3xl border border-[#E5E5E5] bg-white p-12 text-center shadow-sm">
+          <h2 className="text-2xl font-bold text-[#14213D]">
+            No Reports Yet
+          </h2>
 
-                  <p className="text-sm text-slate-500">
-                    {new Date(
-                      report.weekStart
-                    ).toLocaleDateString()}{" "}
-                    -
-                    {" "}
-                    {new Date(
-                      report.weekEnd
-                    ).toLocaleDateString()}
-                  </p>
-                </div>
-
-                <div className="text-right">
-                  <p className="text-sm text-slate-500">
-                    Total Hours
-                  </p>
-
-                  <h2 className="text-2xl font-bold">
-                    {report.totalHours.toFixed(
-                      1
-                    )}
-                    h
-                  </h2>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <p className="text-sm text-slate-500">
-                  Completed Tasks:
-                  {" "}
-                  {
-                    report
-                      .completedTasks
-                      .length
-                  }
-                </p>
-
-                <p className="text-sm text-slate-500">
-                  In Progress:
-                  {" "}
-                  {
-                    report
-                      .inProgressTasks
-                      .length
-                  }
-                </p>
-              </div>
-                
-              <Link
-                href={`/dashboard/reports/${report.id}`}
-                className="inline-flex cursor-pointer rounded-lg border px-3 py-2 text-sm hover:bg-slate-50"
+          <p className="mt-2 text-slate-500">
+            Generate your first report to start tracking productivity.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-6">
+          {reports.map(
+            (report) => (
+              <div
+                key={report.id}
+                className="
+                  rounded-3xl
+                  border
+                  border-[#E5E5E5]
+                  bg-white
+                  p-6
+                  shadow-sm
+                "
               >
-                View Details
-              </Link>
-              <button
-                onClick={async () => {
-                  try {
-                    setSending(true);
+                <div className="flex items-start justify-between">
 
-                    await sendReportEmail(
-                      reportEmail,
+                  <div>
+                    <div className="mb-3 inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                      Generated
+                    </div>
+
+                    <h2 className="text-2xl font-bold text-[#14213D]">
+                      Weekly Report
+                    </h2>
+
+                    <p className="mt-1 text-slate-500">
+                      {new Date(
+                        report.weekStart
+                      ).toLocaleDateString()}
+                      {" - "}
+                      {new Date(
+                        report.weekEnd
+                      ).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  <div className="text-right">
+                    <p className="text-sm text-slate-500">
+                      Tracked Hours
+                    </p>
+
+                    <h2 className="text-5xl font-bold text-[#14213D]">
+                      {report.totalHours.toFixed(
+                        1
+                      )}
+                    </h2>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+
+                  <div className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700">
+                    Completed:{" "}
+                    {
                       report
-                    );
+                        .completedTasks
+                        .length
+                    }
+                  </div>
 
-                    alert(
-                      "Report sent successfully!"
-                    );
-                  } catch (error) {
-                    console.error(error);
+                  <div className="rounded-full bg-[#FCA311]/15 px-3 py-1 text-sm text-[#14213D]">
+                    In Progress:{" "}
+                    {
+                      report
+                        .inProgressTasks
+                        .length
+                    }
+                  </div>
 
-                    alert(
-                      "Failed to send report"
-                    );
-                  } finally {
-                    setSending(false);
-                  }
-                }}
-                className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-white"
-              >
-                {
-                  sending
-                    ? "Sending..."
-                    : "Send Report"
-                }
-              </button>
-            </div>
-          )
-        )}
-      </div>
+                </div>
+
+                <div className="mt-6 flex gap-3">
+
+                  <Link
+                    href={`/dashboard/reports/${report.id}`}
+                    className="
+                      rounded-xl
+                      bg-[#14213D]
+                      px-4
+                      py-2
+                      text-white
+                      transition
+                      hover:shadow-lg
+                    "
+                  >
+                    View Report
+                  </Link>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        setSending(
+                          true
+                        );
+
+                        await sendReportEmail(
+                          reportEmail,
+                          report
+                        );
+
+                        alert(
+                          "Report sent successfully!"
+                        );
+                      } catch (
+                        error
+                      ) {
+                        console.error(
+                          error
+                        );
+
+                        alert(
+                          "Failed to send report"
+                        );
+                      } finally {
+                        setSending(
+                          false
+                        );
+                      }
+                    }}
+                    className="
+                      rounded-xl
+                      bg-[#FCA311]
+                      px-4
+                      py-2
+                      font-medium
+                      text-[#14213D]
+                      transition
+                      hover:shadow-lg
+                    "
+                  >
+                    {sending
+                      ? "Sending..."
+                      : "Send Email"}
+                  </button>
+
+                </div>
+              </div>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }
