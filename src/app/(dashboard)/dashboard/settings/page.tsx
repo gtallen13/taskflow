@@ -128,61 +128,74 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">
-          Settings
-        </h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-[#14213D]">
+            Settings
+          </h1>
 
-        <p className="text-slate-500">
-          Manage your profile,
-          reports and notification
-          preferences.
-        </p>
+          <p className="mt-1 text-slate-500">
+            Manage your account and productivity preferences
+          </p>
+        </div>
+
+        <div className="rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+          Account Active
+        </div>
       </div>
 
       {/* Profile */}
-      <div className="rounded-xl border bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">
-          Profile
-        </h2>
-
-        <div className="grid gap-4">
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              Display Name
-            </label>
-
-            <input
-              value={
-                user?.displayName ||
-                ""
-              }
-              disabled
-              className="w-full rounded-lg border bg-slate-100 p-3"
-            />
+      <div className="
+        rounded-3xl
+        border
+        border-[#E5E5E5]
+        bg-white
+        p-6
+        shadow-sm
+        ">
+      
+        <div className="mb-6 flex items-center gap-4">
+          <div
+            className="
+              flex
+              h-16
+              w-16
+              items-center
+              justify-center
+              rounded-full
+              bg-[#FCA311]
+              text-xl
+              font-bold
+              text-[#14213D]
+            "
+          >
+            {user?.email?.[0]?.toUpperCase()}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">
-              Email
-            </label>
+            <h2 className="text-xl font-bold text-[#14213D]">
+              {user?.displayName ||
+                "User"}
+            </h2>
 
-            <input
-              value={
-                user?.email || ""
-              }
-              disabled
-              className="w-full rounded-lg border bg-slate-100 p-3"
-            />
+            <p className="text-slate-500">
+              {user?.email}
+            </p>
           </div>
         </div>
       </div>
 
       {/* Reports */}
       <div className="rounded-xl border bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">
-          Weekly Reports
-        </h2>
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-[#14213D]">
+            Report Delivery
+          </h2>
+
+          <p className="text-sm text-slate-500">
+            Configure where and when reports are sent
+          </p>
+        </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
@@ -198,7 +211,14 @@ export default function SettingsPage() {
                   e.target.value
                 )
               }
-              className="w-full rounded-lg border p-3"
+              className="w-full rounded-xl
+border
+border-[#E5E5E5]
+bg-white
+px-4
+py-3
+focus:border-[#FCA311]
+focus:outline-none"
             />
           </div>
 
@@ -214,7 +234,14 @@ export default function SettingsPage() {
                   e.target.value
                 )
               }
-              className="w-full cursor-pointer rounded-lg border p-3"
+              className="w-full cursor-pointer rounded-xl
+border
+border-[#E5E5E5]
+bg-white
+px-4
+py-3
+focus:border-[#FCA311]
+focus:outline-none"
             >
               <option>
                 Monday
@@ -253,7 +280,14 @@ export default function SettingsPage() {
                   e.target.value
                 )
               }
-              className="w-full rounded-lg border p-3"
+              className="w-full rounded-xl
+border
+border-[#E5E5E5]
+bg-white
+px-4
+py-3
+focus:border-[#FCA311]
+focus:outline-none"
             />
           </div>
         </div>
@@ -305,16 +339,29 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="flex justify-end">
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="cursor-pointer rounded-lg bg-black px-6 py-3 text-white transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-        >
-          {saving
-            ? "Saving..."
-            : "Save Settings"}
-        </button>
+      <div className=" sticky bottom-0 rounded-3xl border border-[#E5E5E5] bg-white p-4 shadow-l ">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="
+              cursor-pointer
+              rounded-xl
+              bg-[#FCA311]
+              px-6
+              py-3
+              font-medium
+              text-[#14213D]
+              transition
+              hover:shadow-lg
+            "
+          >
+            {saving
+              ? "Saving..."
+              : "Save Settings"}
+          </button>
+
+        </div>
       </div>
     </div>
   );
